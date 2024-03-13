@@ -81,12 +81,19 @@ def delete_sensor(sensor_id: int, db: Session = Depends(get_db), mongodb_client:
 
 # 🙋🏽‍♀️ Add here the route to update a sensor
 @router.post("/{sensor_id}/data")
-def record_data(sensor_id: int, data: schemas.SensorData,db: Session = Depends(get_db) ,redis_client: RedisClient = Depends(get_redis_client)):
-    raise HTTPException(status_code=404, detail="Not implemented")
-    #return repository.record_data(redis=redis_client, sensor_id=sensor_id, data=data)
+def record_data(sensor_id: int, data: schemas.SensorData, db: Session = Depends(get_db), redis_client: RedisClient = Depends(get_redis_client)) -> schemas.SensorData:
+    # Asegurar que el sensor exista en la base de datos antes de grabar los datos
+    db_sensor = repository.get_sensor(db, sensor_id)
+    if db_sensor is None:
+        raise HTTPException(status_code=404, detail="Sensor not found")
+    
+    # Grabar datos en Redis y retornar los datos grabados
+    recorded_data = repository.record_data(redis=redis_client, sensor_id=sensor_id, data=data)
+    return recorded_data
 
 # 🙋🏽‍♀️ Add here the route to get data from a sensor
 @router.get("/{sensor_id}/data")
-def get_data(sensor_id: int, data: schemas.SensorData, db: Session = Depends(get_db) ,redis_client: RedisClient = Depends(get_redis_client)):    
-    raise HTTPException(status_code=404, detail="Not implemented")
-    #return repository.get_data(redis=redis_client, sensor_id=sensor_id, data=data)
+def get_data(sensor_id: int, db: Session = Depends(get_db)) -> schemas.Sensor:
+    # Recuperar y devolver solo datos estáticos del sensor desde PostgreSQL
+    sensor_data = repository.get_data(db=db, sensor_id=sensor_id)
+    return sensor_data

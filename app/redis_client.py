@@ -13,11 +13,11 @@ class RedisClient:
     def ping(self):
         return self._client.ping()
     
-    def get(self, key):
-        return self._client.get(key)
-    
     def set(self, key, value):
         return self._client.set(key, value)
+
+    def get(self, key):
+        return self._client.get(key)
     
     def delete(self, key):
         return self._client.delete(key)

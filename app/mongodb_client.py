@@ -5,8 +5,8 @@ class MongoDBClient:
         self.host = host
         self.port = port
         self.client = MongoClient(host, port)
-        self.database = None
-        self.collection = None
+        self.database = self.client["mydatabase"]
+        self.collection = self.database["Sensors"]
 
     def close(self):
         self.client.close()
