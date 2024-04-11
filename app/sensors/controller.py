@@ -78,7 +78,6 @@ def delete_sensor(sensor_id: int, db: Session = Depends(get_db), mongodb_client:
     
 
 # 🙋🏽‍♀️ Add here the route to update a sensor
-# 🙋🏽‍♀️ Add here the route to update a sensor
 @router.post("/{sensor_id}/data")
 def record_data(sensor_id: int, data: schemas.SensorData,db: Session = Depends(get_db) ,redis_client: Session = Depends(get_redis_client)):
     db_sensor = repository.get_sensor(db, sensor_id)
