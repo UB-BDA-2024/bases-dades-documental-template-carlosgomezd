@@ -1,5 +1,5 @@
 import redis
-
+import json
 class RedisClient:
     def __init__(self, host='localhost', port=6379, db=0):
         self._host = host
@@ -13,11 +13,13 @@ class RedisClient:
     def ping(self):
         return self._client.ping()
     
-    def get(self, key):
-        return self._client.get(key)
-    
     def set(self, key, value):
-        return self._client.set(key, value)
+        value2 = json.dumps(value)
+        return self._client.set(key, value2)
+
+    def get(self, key):
+        data = self._client.get(key)
+        return json.loads(data)
     
     def delete(self, key):
         return self._client.delete(key)
